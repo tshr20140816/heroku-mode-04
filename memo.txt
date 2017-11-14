@@ -1,3 +1,5 @@
 load balancer may be
 
 LOGGLY_TOKEN
+BASIC_USER
+BASIC_PASSWORD
