@@ -58,8 +58,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3",
-        "ext-newrelic" : "*"
+        "php": ">=5.3.3"
     },
     "platform-dev": []
 }
