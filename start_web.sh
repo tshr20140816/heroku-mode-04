@@ -28,6 +28,8 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
+printenv
+
 # curl -H "content-type:text/plain" -d 'START' https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/start/
 
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
