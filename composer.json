@@ -1,8 +1,7 @@
 {
   "require":
   {
-    "php": ">=7.1.0",
-    "ext-newrelic" : "*"
+    "php": ">=7.1.0"
   }
   ,
   "require-dev":
