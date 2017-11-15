@@ -30,7 +30,7 @@ fi
 
 printenv
 
-$home_ip = $(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8.8 | awk '{print $2}')
+home_ip = $(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8.8 | awk '{print $2}')
 
 echo ${home_ip}
 
