@@ -28,6 +28,8 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
+# curl -H "content-type:text/plain" -d 'START' https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/start/
+
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
 vendor/bin/heroku-php-apache2 -C apache.conf www
