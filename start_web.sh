@@ -30,9 +30,7 @@ fi
 
 printenv
 
-home_ip=$(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8.8 | awk '{print $2}')
-
-echo ${home_ip}
+export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8.8 | awk '{print $2}')
 
 # curl -H "content-type:text/plain" -d 'START' https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/start/
 
