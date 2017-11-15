@@ -6,7 +6,6 @@ date
 
 php -l www/redirect.php
 php -l loggly.php
-php -l loggly_error.php
 
 tar xf phpPgAdmin-5.1.tar.bz2
 
