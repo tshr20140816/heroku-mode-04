@@ -59,7 +59,7 @@
     "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3",
-        "newrelic" : "*"
+        "ext-newrelic" : "*"
     },
     "platform-dev": []
 }
