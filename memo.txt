@@ -1,5 +1,9 @@
 load balancer may be
 
+ENV
+
 LOGGLY_TOKEN
 BASIC_USER
 BASIC_PASSWORD
+HOME_FQDN
+LOG_LEVEL (OPTIONAL) default warn
