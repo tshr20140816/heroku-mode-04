@@ -35,6 +35,8 @@ export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8
 url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/APP_START/"
 curl -i -v -H 'content-type:text/plain' -d "${HOME_FQDN} ${HOME_IP_ADDRESS}" ${url}
 
+echo ${HOME_IP_ADDRESS} > /app/HOME_IP_ADDRESS
+
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
 vendor/bin/heroku-php-apache2 -C apache.conf www
