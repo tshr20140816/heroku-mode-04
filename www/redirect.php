@@ -139,7 +139,7 @@ foreach ($pdo->query($sql) as $row)
       'header' => array(
         'Content-Type: text/plain'
         ),
-      'content' => "${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}"
+      'content' => "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}"
       ));
   $res = file_get_contents($url, false, stream_context_create($context));
 }
@@ -150,7 +150,7 @@ $context = array(
     'header' => array(
       'Content-Type: text/plain'
       ),
-    'content' => 'MARKER'
+    'content' => 'R MARKER'
     ));
 $res = file_get_contents($url, false, stream_context_create($context));
 
