@@ -20,8 +20,8 @@ cp config.inc.php www/phppgadmin/conf/config.inc.php
 wait
 
 pushd self_repository
-last_update=$(git log | grep Date)
-echo "<HTML><BODY>${last_update}</BODY></HTML>" > ../www/last_update.html
+last_update=$(git log | grep Date | grep -o "\w\{3\} .\+$")
+echo "${last_update}" > ../www/last_update.txt
 popd
 
 rm -rf self_repository
