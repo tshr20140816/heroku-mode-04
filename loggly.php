@@ -15,14 +15,14 @@ while ($line = fgets($stdin)) {
     if (file_exists('/app/HOME_IP_ADDRESS')) {
       $home_ip_address = file_get_contents('/app/HOME_IP_ADDRESS');
       unlink('/app/HOME_IP_ADDRESS');
-      $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . $server_name . '/';
+      $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/${server_name}/";
       $context = array(
-        "http" => array(
-          "method" => "POST",
-          "header" => array(
-            "Content-Type: text/plain"
+        'http' => array(
+          'method' => 'POST',
+          'header' => array(
+            'Content-Type: text/plain'
           ),
-        "content" => 'S ' . $home_ip_address . ' ' . $server_name
+        'content' => "S ${home_ip_address} ${server_name}"
         ));
       $res = file_get_contents($url, false, stream_context_create($context));
     }
@@ -34,17 +34,16 @@ while ($line = fgets($stdin)) {
     $line = "${server_name} ${line}";
   }
   
-  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . $server_name . '/';
+  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/${server_name}/";
   
   $context = array(
-  "http" => array(
-    "method" => "POST",
-    "header" => array(
-      "Content-Type: text/plain"
+    'http' => array(
+      'method' => 'POST',
+      'header' => array(
+        'Content-Type: text/plain'
       ),
-    "content" => $prefix . ' ' . $line
-    )
-  );
+      'content' => "${prefix} ${line}"
+    ));
   $res = file_get_contents($url, false, stream_context_create($context));
 }
 
