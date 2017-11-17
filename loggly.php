@@ -15,6 +15,7 @@ while ($line = fgets($stdin)) {
     if (file_exists('/app/HOME_IP_ADDRESS')) {
       $home_ip_address = file_get_contents('/app/HOME_IP_ADDRESS');
       unlink('/app/HOME_IP_ADDRESS');
+      $last_update = file_get_contents('/app/www/last_update.txt');
       $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/${server_name}/";
       $context = array(
         'http' => array(
@@ -22,7 +23,7 @@ while ($line = fgets($stdin)) {
           'header' => array(
             'Content-Type: text/plain'
           ),
-        'content' => "S ${home_ip_address} ${server_name}"
+        'content' => "S ${server_name} * ${home_ip_address} * ${last_update}"
         ));
       $res = file_get_contents($url, false, stream_context_create($context));
     }
