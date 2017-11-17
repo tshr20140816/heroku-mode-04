@@ -16,7 +16,7 @@ while ($line = fgets($stdin)) {
       $home_ip_address = file_get_contents('/app/HOME_IP_ADDRESS');
       unlink('/app/HOME_IP_ADDRESS');
       $last_update = file_get_contents('/app/www/last_update.txt');
-      $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/${server_name}/";
+      $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/START/";
       $context = array(
         'http' => array(
           'method' => 'POST',
