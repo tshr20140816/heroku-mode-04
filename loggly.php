@@ -9,17 +9,32 @@ ob_implicit_flush(true);
 while ($line = fgets($stdin)) {
   if ($type == 'A') {
     $array = explode(' ', $line, 3);
-    $servername = $array[1];
-    file_put_contents('/app/servername', $servername);
-  } else {
-    $servername = 'Unknown';
-    if (file_exists('/app/servername')) {
-      $servername = file_get_contents('/app/servername');
+    $server_name = $array[1];
+    file_put_contents('/app/SERVER_NAME', $server_name);
+
+    if (file_exists('/app/HOME_IP_ADDRESS')) {
+      $home_ip_address = file_get_contents('/app/HOME_IP_ADDRESS');
+      unlink('/app/HOME_IP_ADDRESS');
+      $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . $server_name . '/';
+      $context = array(
+        "http" => array(
+          "method" => "POST",
+          "header" => array(
+            "Content-Type: text/plain"
+          ),
+        "content" => 'S ' . $home_ip_address . ' ' . $server_name
+        ));
+      $res = file_get_contents($url, false, stream_context_create($context));
     }
-    $line = "${servername} ${line}";
+  } else {
+    $server_name = 'Unknown';
+    if (file_exists('/app/SERVER_NAME')) {
+      $server_name = file_get_contents('/app/SERVER_NAME');
+    }
+    $line = "${server_name} ${line}";
   }
   
-  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . $servername . '/';
+  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . $server_name . '/';
   
   $context = array(
   "http" => array(
