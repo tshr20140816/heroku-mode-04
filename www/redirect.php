@@ -126,7 +126,7 @@ SELECT M1.fqdn
                            ELSE '' END note
       ,CASE M1.select_type WHEN 1 THEN ' Active' ELSE '' END state
   FROM m_application M1
- ORDER BY M1.fqdn
+ ORDER BY M1.dyno_used
 __HEREDOC__;
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
