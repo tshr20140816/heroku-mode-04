@@ -117,9 +117,9 @@ $sql = <<< __HEREDOC__
 SELECT M1.fqdn
       ,M1.dyno_used
       ,to_char(M1.update_time, 'YYYY/MM/DD HH24:MI:SS') update_time
-      ,(M1.dyno_quota - M1.dyno_used) / 86400 || 'd '
-       || ((M1.dyno_quota - M1.dyno_used) / 3600) % 24 || 'h '
-       || ((M1.dyno_quota - M1.dyno_used) / 60) % 60 || 'm' dhm
+      ,lpad((M1.dyno_quota - M1.dyno_used) / 86400, 2, '0') || 'd '
+       || lpad(((M1.dyno_quota - M1.dyno_used) / 3600) % 24, 2, '0') || 'h '
+       || lpad(((M1.dyno_quota - M1.dyno_used) / 60) % 60, 2, '0') || 'm' dhm
       ,CASE M1.update_flag WHEN 1
                            THEN ' *** ' || ((M1.dyno_used - M1.dyno_used_previous) / 3600) || 'h '
                                         || ((M1.dyno_used - M1.dyno_used_previous) / 60) % 60 || 'm ***'
