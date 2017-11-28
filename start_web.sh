@@ -8,6 +8,8 @@ httpd -V
 httpd -M
 php --version
 whereis php
+cat /proc/version
+curl --version
 printenv
 
 if [ ! -v LOGGLY_TOKEN ]; then
