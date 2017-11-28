@@ -8,6 +8,7 @@ httpd -V
 httpd -M
 php --version
 whereis php
+printenv
 
 if [ ! -v LOGGLY_TOKEN ]; then
   echo "Error : LOGGLY_TOKEN not defined."
@@ -28,12 +29,7 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
-printenv
-
 export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | grep ^A | grep -v 8.8.8.8 | awk '{print $2}')
-
-# url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/APP_START/"
-# curl -i -v -H 'content-type:text/plain' -d "${HOME_FQDN} ${HOME_IP_ADDRESS}" ${url}
 
 echo "${HOME_FQDN} ${HOME_IP_ADDRESS}" > /app/HOME_IP_ADDRESS
 
