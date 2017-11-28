@@ -9,6 +9,7 @@ httpd -M
 php --version
 whereis php
 cat /proc/version
+cat /proc/cpuinfo | grep 'model name' | head -n 1
 curl --version
 printenv
 
