@@ -42,6 +42,7 @@ header("Location: ${url}");
 
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
+      ,M1.fqdn
   FROM m_application M1
  WHERE M1.update_time < localtimestamp - interval '30 minutes'
    AND M1.select_type <> 9
