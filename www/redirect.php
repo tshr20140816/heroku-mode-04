@@ -50,9 +50,11 @@ SELECT M1.api_key
 __HEREDOC__;
 
 $api_keys = array();
+$servers = array();
 foreach ($pdo->query($sql) as $row)
 {
   $api_keys[] = $row['api_key'];
+  $servers[] = str_replace($row['fqdn'], '.herokuapp.com', '');
 }
 
 if (count($api_keys) === 0)
@@ -110,9 +112,16 @@ foreach ($api_keys as $api_key)
           ':b_dyno_quota' => $dyno_quota,
           ':b_api_key' => $api_key,
          ));
-  
-  // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 }
+
+// https://devcenter.heroku.com/articles/build-and-release-using-the-api
+/*
+foreach ($servers as $server)
+{
+  $url = "https://api.heroku.com/apps/${server}/builds";
+  
+}
+*/
 
 // 報告
 
