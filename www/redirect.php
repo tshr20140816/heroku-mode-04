@@ -142,7 +142,12 @@ for ($i = 0; $i < count($servers); $i++)
   error_log($url);
   //error_log($response);
   $data = json_decode($response, true);
-  error_log(var_export($data, true));
+  //error_log(var_export($data, true));
+  foreach($data as $one_record)
+  {
+    error_log(var_export($one_record, true));
+    break;
+  }
   break;
 }
 
