@@ -156,7 +156,7 @@ for ($i = 0; $i < count($servers); $i++)
     }
   }
   error_log($updated_at_old);
-  break;
+  //break;
 }
 
 // 報告
