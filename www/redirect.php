@@ -155,7 +155,7 @@ for ($i = 0; $i < count($servers); $i++)
       $updated_at_old = $updated_at;
     }
   }
-  error_log($servers[$i] . " " . $updated_at_old);
+  error_log($updated_at_old . " " . $servers[$i]);
   //break;
 }
 
