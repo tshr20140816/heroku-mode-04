@@ -139,24 +139,19 @@ for ($i = 0; $i < count($servers); $i++)
   
   $response = file_get_contents($url, false, stream_context_create($context));
   
-  //error_log($servers[$i]);
-  //error_log($response);
   $data = json_decode($response, true);
-  //error_log(var_export($data, true));
   $updated_at = '';
   $updated_at_old = '';
   foreach($data as $one_record)
   {
-    //error_log(var_export($one_record['updated_at'], true));
-    //break;
     $updated_at = $one_record['updated_at'];
     if(strcmp($updated_at, $updated_at_old) > 0)
     {
       $updated_at_old = $updated_at;
     }
   }
+  // ★
   error_log($updated_at_old . " " . $servers[$i]);
-  //break;
 }
 
 // 報告
