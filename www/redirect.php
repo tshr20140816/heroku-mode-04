@@ -54,7 +54,7 @@ $servers = array();
 foreach ($pdo->query($sql) as $row)
 {
   $api_keys[] = $row['api_key'];
-  $servers[] = str_replace($row['fqdn'], '.herokuapp.com', '');
+  $servers[] = str_replace('.herokuapp.com', '', $row['fqdn']);
 }
 
 if (count($api_keys) === 0)
