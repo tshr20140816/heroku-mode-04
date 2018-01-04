@@ -150,7 +150,7 @@ for ($i = 0; $i < count($servers); $i++)
     //error_log(var_export($one_record['updated_at'], true));
     //break;
     $updated_at = $one_record['updated_at'];
-    if(strcmp($updated_at, $updated_at_old) < 0)
+    if(strcmp($updated_at, $updated_at_old) > 0)
     {
       $updated_at_old = $updated_at;
     }
