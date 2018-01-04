@@ -115,13 +115,27 @@ foreach ($api_keys as $api_key)
 }
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
-/*
-foreach ($servers as $server)
+for ($i = 0; $i < count($servers); $i++)
 {
-  $url = "https://api.heroku.com/apps/${server}/builds";
+  $url = 'https://api.heroku.com/apps/' . $servers[$i] . '/builds';
+  
+  $context = array(
+    'http' => array(
+      'method' => 'GET',
+      'header' => array(
+        'Accept: application/vnd.heroku+json; version=3.account-quotas',
+        'Authorization: Bearer ' . $api_keys[$i]
+      )
+    )
+  );
+  
+  $response = file_get_contents($url, false, stream_context_create($context));
+  
+  //$data = json_decode($response, true);
+  error_log($url);
+  error_log($response);
   
 }
-*/
 
 // 報告
 
