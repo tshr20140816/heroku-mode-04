@@ -142,7 +142,7 @@ for ($i = 0; $i < count($servers); $i++)
   error_log($url);
   //error_log($response);
   $data = json_decode($response, true);
-  foreach ($data => $one_record)
+  foreach ($data as $one_record)
   {
     error_log($one_record['update_at']);
   }
