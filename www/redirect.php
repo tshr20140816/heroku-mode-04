@@ -145,7 +145,7 @@ for ($i = 0; $i < count($servers); $i++)
   //error_log(var_export($data, true));
   foreach($data as $one_record)
   {
-    error_log(var_export($one_record, true));
+    error_log(var_export($one_record['source_blob'], true));
     break;
   }
   break;
