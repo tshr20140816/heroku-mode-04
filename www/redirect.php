@@ -139,9 +139,13 @@ for ($i = 0; $i < count($servers); $i++)
   
   $response = file_get_contents($url, false, stream_context_create($context));
   
-  //$data = json_decode($response, true);
   error_log($url);
-  error_log($response);
+  //error_log($response);
+  $data = json_decode($response, true);
+  foreach ($data => $one_record)
+  {
+    error_log($one_record['update_at']);
+  }
   break;
 }
 
