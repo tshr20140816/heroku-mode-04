@@ -139,7 +139,7 @@ for ($i = 0; $i < count($servers); $i++)
   
   $response = file_get_contents($url, false, stream_context_create($context));
   
-  error_log($url);
+  //error_log($servers[$i]);
   //error_log($response);
   $data = json_decode($response, true);
   //error_log(var_export($data, true));
@@ -155,7 +155,7 @@ for ($i = 0; $i < count($servers); $i++)
       $updated_at_old = $updated_at;
     }
   }
-  error_log($updated_at_old);
+  error_log($servers[$i] . " " . $updated_at_old);
   //break;
 }
 
