@@ -146,7 +146,7 @@ for ($i = 0; $i < count($servers); $i++)
   foreach($data as $one_record)
   {
     error_log(var_export($one_record['updated_at'], true));
-    break;
+    //break;
   }
   break;
 }
