@@ -141,7 +141,7 @@ for ($i = 0; $i < count($servers); $i++)
   
   error_log($url);
   //error_log($response);
-  $data = json_decode($response, true);
+  $data = json_decode($response, true)[0];
   foreach ($data as $one_record)
   {
     error_log($one_record['update_at']);
