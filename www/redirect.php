@@ -109,6 +109,8 @@ foreach ($api_keys as $api_key)
           ':b_dyno_quota' => $dyno_quota,
           ':b_api_key' => $api_key,
          ));
+  
+  // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 }
 
 // 報告
