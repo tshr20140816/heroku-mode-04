@@ -142,15 +142,18 @@ for ($i = 0; $i < count($servers); $i++)
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
+  $version = '';
   foreach ($data as $one_record)
   {
     $updated_at = $one_record['updated_at'];
     if (strcmp($updated_at, $updated_at_old) > 0)
     {
       $updated_at_old = $updated_at;
+      $version = $one_record['source_blob']['version'];
     }
   }
   // error_log($updated_at_old . " " . $servers[$i]);
+  error_log($version . " " . $servers[$i]);
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
   $context = array(
     'http' => array(
