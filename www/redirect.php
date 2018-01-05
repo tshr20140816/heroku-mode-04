@@ -122,6 +122,8 @@ foreach ($api_keys as $api_key)
          ));
 }
 
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
+
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
 {
@@ -152,6 +154,14 @@ for ($i = 0; $i < count($servers); $i++)
   }
   // ★
   error_log($updated_at_old . " " . $servers[$i]);
+  $context = array(
+    'http' => array(
+      'method' => 'POST',
+      'header' => array(
+        'Content-Type: text/plain'
+        ),
+      'content' => "R ${updated_at_old} " . servers[$i]
+      ));
 }
 
 // 報告
