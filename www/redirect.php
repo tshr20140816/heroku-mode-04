@@ -153,7 +153,7 @@ for ($i = 0; $i < count($servers); $i++)
     }
   }
   // error_log($updated_at_old . " " . $servers[$i]);
-  error_log($version . " " . $servers[$i]);
+  // error_log($version . " " . $servers[$i]);
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
   $context = array(
     'http' => array(
@@ -161,7 +161,7 @@ for ($i = 0; $i < count($servers); $i++)
       'header' => array(
         'Content-Type: text/plain'
         ),
-      'content' => "R ${updated_at_old} " . $servers[$i]
+      'content' => "R ${version} ${updated_at_old} " . $servers[$i]
       ));
   $res = file_get_contents($url, false, stream_context_create($context));
 }
