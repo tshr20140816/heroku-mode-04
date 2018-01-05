@@ -144,16 +144,15 @@ for ($i = 0; $i < count($servers); $i++)
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
-  foreach($data as $one_record)
+  foreach ($data as $one_record)
   {
     $updated_at = $one_record['updated_at'];
-    if(strcmp($updated_at, $updated_at_old) > 0)
+    if (strcmp($updated_at, $updated_at_old) > 0)
     {
       $updated_at_old = $updated_at;
     }
   }
-  // ★
-  error_log($updated_at_old . " " . $servers[$i]);
+  // error_log($updated_at_old . " " . $servers[$i]);
   $context = array(
     'http' => array(
       'method' => 'POST',
@@ -162,6 +161,7 @@ for ($i = 0; $i < count($servers); $i++)
         ),
       'content' => "R ${updated_at_old} " . servers[$i]
       ));
+  $res = file_get_contents($url, false, stream_context_create($context));
 }
 
 // 報告
