@@ -159,7 +159,7 @@ for ($i = 0; $i < count($servers); $i++)
       'header' => array(
         'Content-Type: text/plain'
         ),
-      'content' => "R ${updated_at_old} " . servers[$i]
+      'content' => "R ${updated_at_old} " . $servers[$i]
       ));
   $res = file_get_contents($url, false, stream_context_create($context));
 }
