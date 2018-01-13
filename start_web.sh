@@ -42,6 +42,6 @@ url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/START/"
 
 last_commit=$(curl -s https://github.com/tshr20140816/heroku-mode-03/commits/master.atom | grep Grit | grep -E -o Commit.+ | head -n 1)
 
-curl -i -H 'content-type:text/plain' -d "S heroku-mode-03 ${last_commit:7:-5}" ${url}
+curl -i -H 'content-type:text/plain' -d "S ${last_commit:7:-5} heroku-mode-03" ${url}
 
 vendor/bin/heroku-php-apache2 -C apache.conf www
