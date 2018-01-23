@@ -85,30 +85,26 @@ $statement = $pdo->prepare($sql);
 foreach ($api_keys as $api_key)
 {
   $url = 'https://api.heroku.com/account';
-  $context = array(
-    'http' => array(
+  $context = [
+    'http' => [
       'method' => 'GET',
-      'header' => array(
+      'header' => [
         'Accept: application/vnd.heroku+json; version=3',
         "Authorization: Bearer ${api_key}"
-      )
-    )
-  );
+      ]]];
   $response = file_get_contents($url, false, stream_context_create($context));
 
   $data = json_decode($response, true);
 
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
-  $context = array(
-    'http' => array(
+  $context = [
+    'http' => [
       'method' => 'GET',
-      'header' => array(
+      'header' => [
         'Accept: application/vnd.heroku+json; version=3.account-quotas',
         "Authorization: Bearer ${api_key}"
-      )
-    )
-  );
+      ]]];
 
   $response = file_get_contents($url, false, stream_context_create($context));
   $data = json_decode($response, true);
@@ -116,10 +112,10 @@ foreach ($api_keys as $api_key)
   $dyno_used = $data['quota_used'];
   $dyno_quota = $data['account_quota'];
   $statement->execute(
-    array(':b_dyno_used' => $dyno_used,
-          ':b_dyno_quota' => $dyno_quota,
-          ':b_api_key' => $api_key,
-         ));
+    [':b_dyno_used' => $dyno_used,
+     ':b_dyno_quota' => $dyno_quota,
+     ':b_api_key' => $api_key,
+    ]);
 }
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
@@ -127,15 +123,13 @@ for ($i = 0; $i < count($servers); $i++)
 {
   $url = 'https://api.heroku.com/apps/' . $servers[$i] . '/builds';
   
-  $context = array(
-    'http' => array(
+  $context = [
+    'http' => [
       'method' => 'GET',
-      'header' => array(
+      'header' => [
         'Accept: application/vnd.heroku+json; version=3.account-quotas',
         'Authorization: Bearer ' . $api_keys[$i]
-      )
-    )
-  );
+      ]]];
   
   $response = file_get_contents($url, false, stream_context_create($context));
   
@@ -155,14 +149,14 @@ for ($i = 0; $i < count($servers); $i++)
   // error_log($updated_at_old . " " . $servers[$i]);
   // error_log($version . " " . $servers[$i]);
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
-  $context = array(
-    'http' => array(
+  $context = [
+    'http' => [
       'method' => 'POST',
-      'header' => array(
+      'header' => [
         'Content-Type: text/plain'
-        ),
+        ],
       'content' => "R ${version} ${updated_at_old} " . $servers[$i]
-      ));
+      ]];
   $res = file_get_contents($url, false, stream_context_create($context));
 }
 
@@ -188,25 +182,25 @@ $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyn
 
 foreach ($pdo->query($sql) as $row)
 {  
-  $context = array(
-    'http' => array(
+  $context = [
+    'http' => [
       'method' => 'POST',
-      'header' => array(
+      'header' => [
         'Content-Type: text/plain'
-        ),
+        ],
       'content' => "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}"
-      ));
+      ]];
   $res = file_get_contents($url, false, stream_context_create($context));
 }
 
-$context = array(
-  'http' => array(
+$context = [
+  'http' => [
     'method' => 'POST',
-    'header' => array(
+    'header' => [
       'Content-Type: text/plain'
-      ),
+      ],
     'content' => 'R MARKER'
-    ));
+    ]];
 $res = file_get_contents($url, false, stream_context_create($context));
 
 $pdo = null;
