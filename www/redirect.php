@@ -118,6 +118,16 @@ foreach ($api_keys as $api_key)
     ]);
 }
 
+$context = [
+  'http' => [
+    'method' => 'POST',
+    'header' => [
+      'Content-Type: text/plain'
+      ],
+    'content' => 'R MARKER 01'
+    ]];
+$res = file_get_contents($url, false, stream_context_create($context));
+
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
 {
@@ -160,6 +170,16 @@ for ($i = 0; $i < count($servers); $i++)
   $res = file_get_contents($url, false, stream_context_create($context));
 }
 
+$context = [
+  'http' => [
+    'method' => 'POST',
+    'header' => [
+      'Content-Type: text/plain'
+      ],
+    'content' => 'R MARKER 02'
+    ]];
+$res = file_get_contents($url, false, stream_context_create($context));
+
 // 報告
 
 $sql = <<< __HEREDOC__
@@ -199,7 +219,7 @@ $context = [
     'header' => [
       'Content-Type: text/plain'
       ],
-    'content' => 'R MARKER'
+    'content' => 'R MARKER 03'
     ]];
 $res = file_get_contents($url, false, stream_context_create($context));
 
