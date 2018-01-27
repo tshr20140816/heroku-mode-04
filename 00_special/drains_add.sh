@@ -12,4 +12,4 @@ if [ ! -v LOGGLY_TOKEN ]; then
   exit
 fi
 
-./heroku drains:add https://logs-01.loggly.com/bulk/${LOGGLY_TOKEN}/tag/heroku -a ${APP_NAME}
+./heroku drains:add https://logs-01.loggly.com/bulk/${LOGGLY_TOKEN}/tag/heroku,${APP_NAME} -a ${APP_NAME}
