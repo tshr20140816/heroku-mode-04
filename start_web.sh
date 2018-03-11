@@ -44,4 +44,7 @@ last_commit=$(curl -s https://github.com/tshr20140816/heroku-mode-03/commits/mas
 
 curl -i -H 'content-type:text/plain' -d "S ${last_commit:7:-5} heroku-mode-03" ${url}
 
+# vendor/bin/heroku-php-apache2 -C apache.conf www
+rm apache.conf
+wget https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf
 vendor/bin/heroku-php-apache2 -C apache.conf www
