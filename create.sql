@@ -21,3 +21,9 @@ end;
 $$;
 
 CREATE TRIGGER update_trigger BEFORE UPDATE ON m_application FOR EACH ROW EXECUTE PROCEDURE set_update_time();
+
+CREATE TABLE m_asin (
+    asin character varying(10) PRIMARY KEY,
+    memo text NULL,
+    change_time timestamp DEFAULT localtimestamp NOT NULL
+);
