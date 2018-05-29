@@ -36,10 +36,11 @@ foreach ($pdo->query($sql) as $row)
 }
 $url = "https://${fqdn}/${path}/";
 
-header("Location: ${url}");
+//header("Location: ${url}");
 
 // 使用量チェック & 更新
 
+/*
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -48,7 +49,7 @@ SELECT M1.api_key
    AND M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-/*
+*/
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -56,7 +57,7 @@ SELECT M1.api_key
  WHERE M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-*/
+
 $api_keys = array();
 $servers = array();
 foreach ($pdo->query($sql) as $row)
@@ -111,12 +112,20 @@ foreach ($api_keys as $api_key)
 
   $dyno_used = $data['quota_used'];
   $dyno_quota = $data['account_quota'];
+  
+  error_log($url);
+  error_log($response);
+  /*
   $statement->execute(
     [':b_dyno_used' => $dyno_used,
      ':b_dyno_quota' => $dyno_quota,
      ':b_api_key' => $api_key,
     ]);
+  */
 }
+
+$pdo = null;
+exit();
 
 $context = [
   'http' => [
