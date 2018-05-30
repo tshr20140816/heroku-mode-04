@@ -283,4 +283,33 @@ $context = [
 $res = file_get_contents($url, false, stream_context_create($context));
 
 $pdo = null;
+
+function get_contents($url_) {
+  
+  $ch = curl_init();
+  
+  curl_setopt($ch, CURLOPT_URL, $url_); 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+  curl_setopt($ch, CURLOPT_HTTPHEADER, 
+               ['Accept: application/vnd.heroku+json; version=3',
+                "Authorization: Bearer ${api_key}"]);
+  
+  $response = curl_exec($ch);
+  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $curl_errno = curl_errno($ch);
+  $curl_error = curl_error($ch);
+  
+  curl_close($ch);
+  
+  if ($curl_errno > 0) {
+    error_log("ERROR http status : ${http_code} url : ${url_}");
+    error_log("${curl_errno} ${curl_error}");
+  }
+  
+  return $response;
+}
 ?>
