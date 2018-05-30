@@ -188,6 +188,8 @@ $pdo = null;
 
 function file_get_contents_by_curl($url_, $headers_, $post_data_) {
   
+  $pid = getmypid();
+  
   for ($i = 0; $i < 3; $i++) {
     $ch = curl_init();
 
