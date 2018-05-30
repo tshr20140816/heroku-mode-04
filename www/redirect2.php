@@ -127,6 +127,8 @@ $context = [
     ]];
 //$res = file_get_contents($url, false, stream_context_create($context));
 
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
+
 file_get_contents_by_curl($url, ['Content-Type: text/plain'], ['content' => 'R MARKER 01']);
 
 exit();
