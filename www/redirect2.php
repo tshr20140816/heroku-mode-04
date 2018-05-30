@@ -138,6 +138,7 @@ foreach ($api_keys as $api_key)
   $response = file_get_contents($url, false, stream_context_create($context));
   */
   
+  /*
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
   
   $ch = curl_init();
@@ -156,12 +157,17 @@ foreach ($api_keys as $api_key)
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
   
   curl_close($ch);
+  */
+  
+  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+  
+  $response = file_get_contents_by_curl($url,
+                                        ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                                         "Authorization: Bearer ${api_key}"]);
+  
+  error_log($response);
   
   $data = json_decode($response, true);
-  
-  error_log($url);
-  error_log($http_code);
-  error_log($response);
 
   $dyno_used = $data['quota_used'];
   $dyno_quota = $data['account_quota'];
@@ -284,30 +290,40 @@ $res = file_get_contents($url, false, stream_context_create($context));
 
 $pdo = null;
 
-function get_contents($url_) {
+function file_get_contents_by_curl($url_, $headers_) {
   
-  $ch = curl_init();
-  
-  curl_setopt($ch, CURLOPT_URL, $url_); 
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, 
-               ['Accept: application/vnd.heroku+json; version=3',
-                "Authorization: Bearer ${api_key}"]);
-  
-  $response = curl_exec($ch);
-  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  $curl_errno = curl_errno($ch);
-  $curl_error = curl_error($ch);
-  
-  curl_close($ch);
-  
-  if ($curl_errno > 0) {
-    error_log("ERROR http status : ${http_code} url : ${url_}");
-    error_log("${curl_errno} ${curl_error}");
+  for ($i = 0; $i < 3; $i++) {
+    $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_URL, $url_); 
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+    curl_setopt($ch, CURLOPT_ENCODING, "");
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+    curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+    /*
+    curl_setopt($ch, CURLOPT_HTTPHEADER, 
+                 ['Accept: application/vnd.heroku+json; version=3',
+                  "Authorization: Bearer ${api_key}"]);
+    */
+    if (is_null($headers_) == FALSE) {
+      curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_);
+    }
+
+    $response = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curl_errno = curl_errno($ch);
+    $curl_error = curl_error($ch);
+
+    curl_close($ch);
+
+    if ($curl_errno > 0) {
+      error_log("ERROR http status : ${http_code} url : ${url_}");
+      error_log("${curl_errno} ${curl_error}");
+      continue;
+    }
+    error_log("SUCCESS http status : ${http_code} url : ${url_}");
+    break;
   }
   
   return $response;
