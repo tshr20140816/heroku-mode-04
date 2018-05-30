@@ -1,13 +1,17 @@
 <?php
 
+$pid = getmypid();
+
 if (!isset($_GET['p']) || $_GET['p'] === '')
 {
+  error_log('IGNORE');
   exit();
 }
 $path = $_GET['p'];
 
 if ($path !== 'ttrss' && $path !== 'ml')
 {
+  error_log('IGNORE');
   exit();
 }
 
@@ -34,9 +38,8 @@ foreach ($pdo->query($sql) as $row)
   $fqdn = $row['fqdn'];
   break;
 }
-$url = "https://${fqdn}/${path}/";
 
-header("Location: ${url}");
+header("Location: https://${fqdn}/${path}/");
 
 // 使用量チェック & 更新
 
@@ -69,6 +72,7 @@ foreach ($pdo->query($sql) as $row)
 if (count($api_keys) === 0)
 {
   $pdo = null;
+  error_log('RECORD NOT FOUND');
   exit();
 }
 
@@ -209,11 +213,12 @@ function file_get_contents_by_curl($url_, $headers_, $post_data_) {
     curl_close($ch);
 
     if ($curl_errno > 0) {
-      error_log("ERROR http status : ${http_code} url : ${url_}");
-      error_log("${curl_errno} ${curl_error}");
+      error_log("${pid} ERROR http status : ${http_code} url : ${url_}");
+      error_log("${pid} ${curl_errno} ${curl_error}");
+      $response = null;
       continue;
     }
-    error_log("SUCCESS http status : ${http_code} url : ${url_}");
+    error_log("${pid} SUCCESS http status : ${http_code} url : ${url_}");
     break;
   }
   
