@@ -43,6 +43,7 @@ header("Location: https://${fqdn}/${path}/");
 
 // 使用量チェック & 更新
 
+/*
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -51,7 +52,7 @@ SELECT M1.api_key
    AND M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-/*
+*/
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -59,7 +60,7 @@ SELECT M1.api_key
  WHERE M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-*/
+
 
 $api_keys = array();
 $servers = array();
