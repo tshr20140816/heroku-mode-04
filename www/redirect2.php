@@ -117,6 +117,8 @@ foreach ($api_keys as $api_key)
   break;
 }
 
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
+
 $context = [
   'http' => [
     'method' => 'POST',
@@ -125,7 +127,7 @@ $context = [
       ],
     'content' => 'R MARKER 01'
     ]];
-//$res = file_get_contents($url, false, stream_context_create($context));
+$res = file_get_contents($url, false, stream_context_create($context));
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
 
