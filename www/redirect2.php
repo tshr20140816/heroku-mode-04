@@ -121,8 +121,8 @@ foreach ($api_keys as $api_key)
   curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
   curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:56.0) Gecko/20100101 Firefox/60.0'); 
   curl_setpot($ch, CURLOPT_HTTPHEADER, 
-              ['Accept' => 'application/vnd.heroku+json; version=3.account-quotas',
-               'Authorization' => "Authorization: Bearer ${api_key}"]);
+              ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+               "Authorization: Authorization: Bearer ${api_key}"]);
   
   $response = curl_exec($ch);
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
