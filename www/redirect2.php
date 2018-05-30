@@ -86,86 +86,18 @@ $statement = $pdo->prepare($sql);
 foreach ($api_keys as $api_key)
 {
   $url = 'https://api.heroku.com/account';
-  /*
-  $context = [
-    'http' => [
-      'method' => 'GET',
-      'header' => [
-        'Accept: application/vnd.heroku+json; version=3',
-        "Authorization: Bearer ${api_key}"
-      ]]];
-  $response = file_get_contents($url, false, stream_context_create($context));
-  */
   
-  $ch = curl_init();
-  
-  curl_setopt($ch, CURLOPT_URL, $url); 
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, 
-               ['Accept: application/vnd.heroku+json; version=3',
-                "Authorization: Bearer ${api_key}"]);
-  
-  $response = curl_exec($ch);
-  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  $curl_errno = curl_errno($ch);
-  $curl_error = curl_error($ch);
-  
-  curl_close($ch);
-  
-  error_log($url);
-  error_log($http_code);
-  error_log($curl_errno);
-  error_log($curl_error);
-  error_log($response);
+  $response = file_get_contents_by_curl($url,
+                                        ['Accept: application/vnd.heroku+json; version=3',
+                                         "Authorization: Bearer ${api_key}"]);
   
   $data = json_decode($response, true);
 
-  /*
-  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
-
-  $context = [
-    'http' => [
-      'method' => 'GET',
-      'header' => [
-        'Accept: application/vnd.heroku+json; version=3.account-quotas',
-        "Authorization: Bearer ${api_key}"
-      ]]];
-
-  $response = file_get_contents($url, false, stream_context_create($context));
-  */
-  
-  /*
-  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
-  
-  $ch = curl_init();
-  
-  curl_setopt($ch, CURLOPT_URL, $url); 
-  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
-  curl_setopt($ch, CURLOPT_ENCODING, "");
-  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
-  curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-  curl_setopt($ch, CURLOPT_HTTPHEADER, 
-               ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                "Authorization: Bearer ${api_key}"]);
-  
-  $response = curl_exec($ch);
-  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-  
-  curl_close($ch);
-  */
-  
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
   
   $response = file_get_contents_by_curl($url,
                                         ['Accept: application/vnd.heroku+json; version=3.account-quotas',
                                          "Authorization: Bearer ${api_key}"]);
-  
-  error_log($response);
   
   $data = json_decode($response, true);
 
