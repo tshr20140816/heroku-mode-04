@@ -111,11 +111,15 @@ foreach ($api_keys as $api_key)
   
   $response = curl_exec($ch);
   $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  $curl_errno = curl_errno($ch);
+  $curl_error = curl_error($ch);
   
   curl_close($ch);
   
   error_log($url);
   error_log($http_code);
+  error_log($curl_errno);
+  error_log($curl_error);
   error_log($response);
   
   $data = json_decode($response, true);
