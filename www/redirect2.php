@@ -97,6 +97,7 @@ foreach ($api_keys as $api_key)
 
   $data = json_decode($response, true);
 
+  /*
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
 
   $context = [
@@ -108,6 +109,7 @@ foreach ($api_keys as $api_key)
       ]]];
 
   $response = file_get_contents($url, false, stream_context_create($context));
+  */
   
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
   
@@ -132,6 +134,7 @@ foreach ($api_keys as $api_key)
   $data = json_decode($response, true);
   
   error_log($url);
+  error_log($http_code);
   error_log($response);
 
   $dyno_used = $data['quota_used'];
