@@ -131,7 +131,7 @@ $res = file_get_contents($url, false, stream_context_create($context));
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
 
-file_get_contents_by_curl($url, ['Content-Type: text/plain'], ['content' => 'R MARKER 01']);
+file_get_contents_by_curl($url, ['Content-Type: text/plain'], 'R MARKER 01');
 
 exit();
 
@@ -248,7 +248,7 @@ function file_get_contents_by_curl($url_, $headers_, $post_data_) {
     }
     if (is_null($post_data_) == FALSE) {
       curl_setopt($ch, CURLOPT_POST, true); 
-      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data_));
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $post_data_);
     }
 
     $response = curl_exec($ch);
