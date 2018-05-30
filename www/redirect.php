@@ -118,6 +118,7 @@ foreach ($api_keys as $api_key)
     ]);
 }
 
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
 $context = [
   'http' => [
     'method' => 'POST',
