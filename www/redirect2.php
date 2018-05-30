@@ -114,7 +114,7 @@ foreach ($api_keys as $api_key)
   */
 
   $pdo = null;
-  exit();
+  break();
 }
 
 $context = [
@@ -125,7 +125,11 @@ $context = [
       ],
     'content' => 'R MARKER 01'
     ]];
-$res = file_get_contents($url, false, stream_context_create($context));
+//$res = file_get_contents($url, false, stream_context_create($context));
+
+file_get_contents_by_curl($url, ['Content-Type: text/plain'], ['content' => 'R MARKER 01']);
+
+exit();
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
