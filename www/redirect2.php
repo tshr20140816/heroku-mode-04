@@ -89,7 +89,8 @@ foreach ($api_keys as $api_key)
   
   $response = file_get_contents_by_curl($url,
                                         ['Accept: application/vnd.heroku+json; version=3',
-                                         "Authorization: Bearer ${api_key}"]);
+                                         "Authorization: Bearer ${api_key}"],
+                                        null);
   
   $data = json_decode($response, true);
 
@@ -97,7 +98,8 @@ foreach ($api_keys as $api_key)
   
   $response = file_get_contents_by_curl($url,
                                         ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                                         "Authorization: Bearer ${api_key}"]);
+                                         "Authorization: Bearer ${api_key}"],
+                                        null);
   
   $data = json_decode($response, true);
 
@@ -222,7 +224,7 @@ $res = file_get_contents($url, false, stream_context_create($context));
 
 $pdo = null;
 
-function file_get_contents_by_curl($url_, $headers_) {
+function file_get_contents_by_curl($url_, $headers_, $post_data_) {
   
   for ($i = 0; $i < 3; $i++) {
     $ch = curl_init();
@@ -233,13 +235,12 @@ function file_get_contents_by_curl($url_, $headers_) {
     curl_setopt($ch, CURLOPT_ENCODING, "");
     curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
-    /*
-    curl_setopt($ch, CURLOPT_HTTPHEADER, 
-                 ['Accept: application/vnd.heroku+json; version=3',
-                  "Authorization: Bearer ${api_key}"]);
-    */
     if (is_null($headers_) == FALSE) {
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers_);
+    }
+    if (is_null($post_data_) == FALSE) {
+      curl_setopt($ch, CURLOPT_POST, true); 
+      curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_data_));
     }
 
     $response = curl_exec($ch);
