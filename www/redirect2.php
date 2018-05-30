@@ -108,13 +108,31 @@ foreach ($api_keys as $api_key)
       ]]];
 
   $response = file_get_contents($url, false, stream_context_create($context));
+  
+  $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
+  
+  $ch = curl_init();
+  
+  curl_setopt($ch, CURLOPT_URL, $url); 
+  curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+  curl_setopt($ch, CURLOPT_ENCODING, "");
+  curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+  curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+  curl_setopt($ch, CURLOPT_USERAGENT, 'Mozilla/5.0 (Windows NT 6.1; rv:56.0) Gecko/20100101 Firefox/60.0'); 
+  
+  $response = curl_exec($ch);
+  $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+  
+  curl_close($ch);
+  
   $data = json_decode($response, true);
-
-  $dyno_used = $data['quota_used'];
-  $dyno_quota = $data['account_quota'];
   
   error_log($url);
   error_log($response);
+
+  $dyno_used = $data['quota_used'];
+  $dyno_quota = $data['account_quota'];
   /*
   $statement->execute(
     [':b_dyno_used' => $dyno_used,
@@ -122,10 +140,10 @@ foreach ($api_keys as $api_key)
      ':b_api_key' => $api_key,
     ]);
   */
-}
 
-$pdo = null;
-exit();
+  $pdo = null;
+  exit();
+}
 
 $context = [
   'http' => [
