@@ -6,27 +6,17 @@ $prefix = $argv[2];
 $stdin = fopen('php://stdin', 'r');
 ob_implicit_flush(true);
 
-$server_name = getenv('HEROKU_APP_NAME');
-
 while ($line = fgets($stdin)) {
-  if ($type == 'A') {
-    if (file_exists('/app/HOME_IP_ADDRESS')) {
-      $home_ip_address = file_get_contents('/app/HOME_IP_ADDRESS');
-      unlink('/app/HOME_IP_ADDRESS');
-      $last_update = file_get_contents('/app/www/last_update.txt');
-      loggly_log("S ${server_name} * ${home_ip_address} * ${last_update}", 'START');
-    }
-  } else {
+  if ($type == 'E') {
     $line = "${server_name} ${line}";
-  }
-  
-  loggly_log("${prefix} ${line}", $server_name);
+  }  
+  loggly_log("${prefix} ${line}");
 }
 
 exit();
 
-function loggly_log($message_, $tag_) {
-  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . "/tag/${tag_}/";
+function loggly_log($message_) {
+  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/' . getenv('HEROKU_APP_NAME') . '/';
   $ch = curl_init();
   curl_setopt($ch, CURLOPT_URL, $url);
   curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
