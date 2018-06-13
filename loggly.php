@@ -8,7 +8,7 @@ ob_implicit_flush(true);
 
 while ($line = fgets($stdin)) {
   if ($type == 'E') {
-    $line = "${server_name} ${line}";
+    $line = getenv('HEROKU_APP_NAME') . " ${line}";
   }  
   loggly_log("${prefix} ${line}");
 }
