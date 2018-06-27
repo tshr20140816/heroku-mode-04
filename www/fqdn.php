@@ -23,7 +23,7 @@ SELECT M1.fqdn
  ORDER BY CAST(M1.dyno_used as numeric) / CAST(M1.dyno_quota as numeric)
  LIMIT 1 OFFSET 
 __HEREDOC__;
-$sql .= $n
+$sql .= $n;
 
 foreach ($pdo->query($sql) as $row)
 {
