@@ -5,7 +5,7 @@ if (!isset($_GET['n']) || $_GET['n'] === '' || is_array($_GET['n'])) {
 } else {
   $n = $_GET['n'];
   if (preg_match('/^\d+$/', $n) == 0) {
-    $n  = 0;
+    $n = 0;
   }
 }
 
