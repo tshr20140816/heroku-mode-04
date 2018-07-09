@@ -36,9 +36,9 @@ export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | tail -n2 | grep -o '[0-
 
 url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/START/"
 
-last_commit=$(curl -s https://github.com/tshr20140816/heroku-mode-03/commits/master.atom | grep Grit | grep -E -o Commit.+ | head -n 1)
+last_commit=$(curl -s https://github.com/tshr20140816/heroku-mode-06/commits/master.atom | grep Grit | grep -E -o Commit.+ | head -n 1)
 
-curl -i -H 'content-type:text/plain' -d "S ${last_commit:7:-5} heroku-mode-03" ${url}
+curl -i -H 'content-type:text/plain' -d "S ${last_commit:7:-5} heroku-mode-06" ${url}
 
 last_update=$(cat /app/www/last_update.txt)
 
