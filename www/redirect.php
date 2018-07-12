@@ -195,7 +195,7 @@ file_get_contents_by_curl($url, ['Content-Type: text/plain', 'Connection: Keep-A
 curl_close($ch);
 $pdo = null;
 
-// exit();
+exit();
 
 function file_get_contents_by_curl($ch_, $url_, $headers_, $post_data_) {
   
