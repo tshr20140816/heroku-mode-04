@@ -186,7 +186,7 @@ $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyn
 foreach ($pdo->query($sql) as $row)
 {  
   file_get_contents_by_curl($url,
-                            ['Content-Type: text/plain'],
+                            ['Content-Type: text/plain', 'Connection: Keep-Alive'],
                             "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}");
 }
 
