@@ -65,6 +65,7 @@ file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: K
 for ($i = 0; $i < count($servers); $i++)
 {
   $url = 'https://api.heroku.com/apps/' . $servers[$i] . '/builds';
+  error_log('api_keys : ' . $api_keys[$i]);
   
   $response = file_get_contents_by_curl($ch,
                                         $url,
