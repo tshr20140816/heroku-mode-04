@@ -89,6 +89,7 @@ for ($i = 0; $i < count($servers); $i++)
   }
   // error_log($updated_at_old . " " . $servers[$i]);
   // error_log($version . " " . $servers[$i]);
+  exit();
   
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
   file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
