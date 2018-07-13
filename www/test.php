@@ -61,6 +61,9 @@ foreach ($api_keys as $api_key)
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
 file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
+curl_close($ch);
+$ch = curl_init();
+
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
 {
