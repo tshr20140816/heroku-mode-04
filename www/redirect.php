@@ -87,6 +87,7 @@ UPDATE m_application
 __HEREDOC__;
 $statement = $pdo->prepare($sql);
 $ch = curl_init();
+$ch_loggly = curl_init();
 
 foreach ($api_keys as $api_key)
 {
@@ -124,8 +125,8 @@ foreach ($api_keys as $api_key)
     ]);
 }
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
-file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
+file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
@@ -156,12 +157,12 @@ for ($i = 0; $i < count($servers); $i++)
   // error_log($updated_at_old . " " . $servers[$i]);
   // error_log($version . " " . $servers[$i]);
   
-  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
-  file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
+  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
+  file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
 }
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
-file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
+file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
 
 // 報告
 
@@ -181,18 +182,19 @@ SELECT M1.fqdn
  ORDER BY M1.dyno_used
 __HEREDOC__;
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno/';
+$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 
 foreach ($pdo->query($sql) as $row)
 {  
-  file_get_contents_by_curl($ch, $url,
+  file_get_contents_by_curl($ch_loggly, $url,
                             ['Content-Type: text/plain', 'Connection: Keep-Alive'],
                             "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}");
 }
 
-file_get_contents_by_curl($ch, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
+file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
 
 curl_close($ch);
+curl_close($ch_loggly);
 $pdo = null;
 
 exit();
