@@ -9,7 +9,13 @@ if (!isset($_GET['p']) || $_GET['p'] === '')
 }
 $path = $_GET['p'];
 
-if ($path !== 'ttrss' && $path !== 'ml')
+$offset = 0;
+if (isset($_GET['n']) && $_GET['n'] !== '' && ctype_digit($_GET['n']))
+{
+  $offset = $_GET['n'];
+}
+
+if ($path !== 'ttrss' && $path !== 'ml' && $path !== 'carp_news')
 {
   error_log('IGNORE');
   exit();
@@ -22,7 +28,7 @@ $pdo = new PDO(
   $connection_info['user'],
   $connection_info['pass']);
 
-// 未使用割合が最も多いサーバにリダイレクト
+// 未使用割合が ($offset + 1) 番目に多いサーバにリダイレクト
 
 $sql = <<< __HEREDOC__
 SELECT M1.fqdn
@@ -30,8 +36,8 @@ SELECT M1.fqdn
  WHERE M1.select_type = 1
    AND M1.dyno_quota <> -1
  ORDER BY CAST(M1.dyno_used as numeric) / CAST(M1.dyno_quota as numeric)
- LIMIT 1 OFFSET 0
 __HEREDOC__;
+$sql .= " LIMIT 1 OFFSET ${offset}";
 
 foreach ($pdo->query($sql) as $row)
 {
@@ -93,25 +99,25 @@ foreach ($api_keys as $api_key)
 {
   $url = 'https://api.heroku.com/account';
   
-  $response = file_get_contents_by_curl($ch,
-                                        $url,
-                                        ['Accept: application/vnd.heroku+json; version=3',
-                                         "Authorization: Bearer ${api_key}",
-                                         'Connection: Keep-Alive',
-                                        ],
-                                        null);
+  $response = get_contents($ch,
+                           $url,
+                           ['Accept: application/vnd.heroku+json; version=3',
+                            "Authorization: Bearer ${api_key}",
+                            'Connection: Keep-Alive',
+                           ],
+                           null);
   
   $data = json_decode($response, true);
 
   $url = "https://api.heroku.com/accounts/${data['id']}/actions/get-quota";
   
-  $response = file_get_contents_by_curl($ch,
-                                        $url,
-                                        ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                                         "Authorization: Bearer ${api_key}",
-                                         'Connection: Keep-Alive',
-                                        ],
-                                        null);
+  $response = get_contents($ch,
+                           $url,
+                           ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                            "Authorization: Bearer ${api_key}",
+                            'Connection: Keep-Alive',
+                           ],
+                           null);
   
   $data = json_decode($response, true);
 
@@ -126,20 +132,20 @@ foreach ($api_keys as $api_key)
 }
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
+get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
 {
   $url = 'https://api.heroku.com/apps/' . $servers[$i] . '/builds';
   
-  $response = file_get_contents_by_curl($ch,
-                                        $url,
-                                        ['Accept: application/vnd.heroku+json; version=3.account-quotas',
-                                         'Authorization: Bearer ' . $api_keys[$i],
-                                         'Connection: Keep-Alive',
-                                        ],
-                                        null);
+  $response = get_contents($ch,
+                           $url,
+                           ['Accept: application/vnd.heroku+json; version=3.account-quotas',
+                            'Authorization: Bearer ' . $api_keys[$i],
+                            'Connection: Keep-Alive',
+                           ],
+                           null);
   
   $data = json_decode($response, true);
   $updated_at = '';
@@ -158,11 +164,11 @@ for ($i = 0; $i < count($servers); $i++)
   // error_log($version . " " . $servers[$i]);
   
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-  file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
+  get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
 }
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
+get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
 
 // 報告
 
@@ -186,12 +192,12 @@ $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyn
 
 foreach ($pdo->query($sql) as $row)
 {  
-  file_get_contents_by_curl($ch_loggly, $url,
-                            ['Content-Type: text/plain', 'Connection: Keep-Alive'],
-                            "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}");
+  get_contents($ch_loggly, $url,
+               ['Content-Type: text/plain', 'Connection: Keep-Alive'],
+               "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}");
 }
 
-file_get_contents_by_curl($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
+get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
 
 curl_close($ch);
 curl_close($ch_loggly);
@@ -199,7 +205,7 @@ $pdo = null;
 
 exit();
 
-function file_get_contents_by_curl($ch_, $url_, $headers_, $post_data_) {
+function get_contents($ch_, $url_, $headers_, $post_data_) {
   
   $pid = getmypid();
   
