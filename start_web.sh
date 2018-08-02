@@ -32,6 +32,9 @@ if [ ! -v BASIC_PASSWORD ]; then
   exit
 fi
 
+rm apache.conf
+wget https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf &
+
 export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | tail -n2 | grep -o '[0-9]\+.\+')
 
 url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/START/"
@@ -46,7 +49,6 @@ curl -i -H 'content-type:text/plain' -d "S ${HEROKU_APP_NAME} * ${HOME_FQDN} ${H
 
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
-# vendor/bin/heroku-php-apache2 -C apache.conf www
-rm apache.conf
-wget https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf
+wait
+
 vendor/bin/heroku-php-apache2 -C apache.conf www
