@@ -5,14 +5,15 @@ set -x
 export TZ=JST-9
 
 httpd -V
-httpd -M
+httpd -M | sort
 php --version
 whereis php
+php -m
 cat /proc/version
 cat /proc/cpuinfo | grep 'model name' | head -n 1
 curl --version
-printenv
-
+printenv | sort
+  
 if [ ! -v LOGGLY_TOKEN ]; then
   echo "Error : LOGGLY_TOKEN not defined."
   exit
