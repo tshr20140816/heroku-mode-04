@@ -37,6 +37,9 @@ rm apache.conf
 wget https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf &
 
 export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | tail -n2 | grep -o '[0-9]\+.\+')
+if [ -z "${HOME_IP_ADDRESS}" ]; then
+  HOME_IP_ADDRESS=127.0.0.1
+fi
 
 url="https://logs-01.loggly.com/inputs/${LOGGLY_TOKEN}/tag/START/"
 
