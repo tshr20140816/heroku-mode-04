@@ -53,7 +53,7 @@ $file_name_running = '/tmp/REDIRECT_PHP_RUNNING';
 if (file_exists($file_name_running)) {
   exit();
 }
-touch('/tmp/REDIRECT_PHP_RUNNING');
+touch($file_name_running);
 
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
