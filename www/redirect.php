@@ -51,7 +51,7 @@ header("Location: https://${fqdn}/${path}/");
 
 $file_name_running = '/tmp/REDIRECT_PHP_RUNNING';
 if (file_exists($file_name_running)) {
-  // exit();
+  exit();
 }
 touch('/tmp/REDIRECT_PHP_RUNNING');
 
@@ -85,6 +85,7 @@ if (count($api_keys) === 0)
 {
   $pdo = null;
   error_log('RECORD NOT FOUND');
+  unlink($file_name_running);
   exit();
 }
 
@@ -208,6 +209,7 @@ get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Al
 curl_close($ch);
 curl_close($ch_loggly);
 $pdo = null;
+unlink($file_name_running);
 
 exit();
 
