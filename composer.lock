@@ -13,12 +13,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/heroku/heroku-buildpack-php.git",
-                "reference": "d4336f0133e954dd1180460dab0a77795531b5d0"
+                "reference": "6f315aee633aae4766b7004bdcd40dceb0cf0afa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/d4336f0133e954dd1180460dab0a77795531b5d0",
-                "reference": "d4336f0133e954dd1180460dab0a77795531b5d0",
+                "url": "https://api.github.com/repos/heroku/heroku-buildpack-php/zipball/6f315aee633aae4766b7004bdcd40dceb0cf0afa",
+                "reference": "6f315aee633aae4766b7004bdcd40dceb0cf0afa",
                 "shasum": ""
             },
             "bin": [
@@ -49,7 +49,7 @@
                 "nginx",
                 "php"
             ],
-            "time": "2018-07-30T13:42:41+00:00"
+            "time": "2018-08-07T21:42:50+00:00"
         }
     ],
     "aliases": [],
