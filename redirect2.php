@@ -70,7 +70,7 @@ for ($i = 0; $i < count($servers); $i++)
 }
 
 curl_close($ch);
-$pdo = null
+$pdo = null;
 
 exit();
 
