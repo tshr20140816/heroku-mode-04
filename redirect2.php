@@ -50,6 +50,7 @@ for ($i = 0; $i < count($servers); $i++)
                            ],
                            null);
   
+  error_log($response);
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
@@ -62,7 +63,7 @@ for ($i = 0; $i < count($servers); $i++)
       $updated_at_old = $updated_at;
       $version = $one_record['source_blob']['version'];
       $stack = $one_record['build_stack']['name'];
-      error_log($stack . " " . $servers[$i]);
+      //error_log($stack . " " . $servers[$i]);
     }
   }
   error_log($updated_at_old . " " . $servers[$i]);
