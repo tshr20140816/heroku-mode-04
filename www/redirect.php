@@ -158,6 +158,7 @@ for ($i = 0; $i < count($servers); $i++)
   $updated_at = '';
   $updated_at_old = '';
   $version = '';
+  $stack = '';
   foreach ($data as $one_record)
   {
     $updated_at = $one_record['updated_at'];
@@ -165,13 +166,14 @@ for ($i = 0; $i < count($servers); $i++)
     {
       $updated_at_old = $updated_at;
       $version = $one_record['source_blob']['version'];
+      $stack = $one_record['stack'];
     }
   }
   // error_log($updated_at_old . " " . $servers[$i]);
   // error_log($version . " " . $servers[$i]);
   
   $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-  get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} " . $servers[$i]);
+  get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} ${stack} " . $servers[$i]);
 }
 
 $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
