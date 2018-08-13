@@ -138,8 +138,8 @@ foreach ($api_keys as $api_key)
     ]);
 }
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
+$url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
+get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
 // https://devcenter.heroku.com/articles/build-and-release-using-the-api
 for ($i = 0; $i < count($servers); $i++)
@@ -174,12 +174,10 @@ for ($i = 0; $i < count($servers); $i++)
   // error_log($updated_at_old . " " . $servers[$i]);
   // error_log($version . " " . $servers[$i]);
   
-  $url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-  get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} ${stack} " . $servers[$i]);
+  get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], "R ${version} ${updated_at_old} ${stack} " . $servers[$i]);
 }
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
+get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 02');
 
 // 報告
 
