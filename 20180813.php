@@ -86,6 +86,37 @@ foreach ($api_keys as $api_key)
 
 error_log('CHECK POINT 100 ' . date('H:i:s'));
 
+$mh = curl_multi_init();
+foreach ($api_keys as $api_key)
+{
+  $url = 'https://api.heroku.com/account';
+  $ch2 = curl_init();
+  curl_setopt_array($ch2,
+    [
+    CURLOPT_URL => $url,
+    CURLOPT_RETURNTRANSFER => TRUE,
+    CURLOPT_CONNECTTIMEOUT => 20,
+    CURLOPT_ENCODING => '',
+    CURLOPT_FOLLOWLOCATION => TRUE,
+    CURLOPT_MAXREDIRS => 3,
+    CURLOPT_SSL_FALSESTART => TRUE,
+    CURLOPT_PATH_AS_IS => TRUE,
+    CURLOPT_HTTPHEADER => ['Accept: application/vnd.heroku+json; version=3',
+                           "Authorization: Bearer ${api_key}",
+                           'Connection: Keep-Alive',
+                          ],
+    ]);
+  curl_multi_add_handle($mh, $ch2);
+  
+  do {
+    $stat = curl_multi_exec($mh, $running);
+  } while ($stat === CURLM_CALL_MULTI_PERFORM);
+  
+  
+}
+
+error_log('CHECK POINT 200 ' . date('H:i:s'));
+
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
@@ -205,6 +236,37 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     error_log("${pid} SUCCESS http status : ${http_code} url : ${url_}");
     break;
   }
+  
+  return $response;
+}
+
+function get_contents2($mh_) {
+  do {
+    $stat = curl_multi_exec($mh_, $running);
+  } while ($stat === CURLM_CALL_MULTI_PERFORM);
+  
+  do switch (curl_multi_select($mh_, 10)) {
+    case -1:
+      usleep(10);
+      do {
+        $stat = curl_multi_exec($mh_, $running);
+      } while ($stat === CURLM_CALL_MULTI_PERFORM);
+      continue 2;
+    case 0:
+      continue 2;
+    default:
+      do {
+        $stat = curl_multi_exec($mh, $running);
+      } while ($stat === CURLM_CALL_MULTI_PERFORM);
+    
+      do if ($raised = curl_multi_info_read($mh_, $remains)) {
+        $response = curl_multi_getcontent($raised['handle']);
+        curl_multi_remove_handle($mh, $raised['handle']);
+        curl_close($raised['handle']);
+      } while ($remains);
+  } while ($running);
+  
+  curl_multi_close($mh_);
   
   return $response;
 }
