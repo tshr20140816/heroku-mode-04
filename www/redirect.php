@@ -55,6 +55,7 @@ if (file_exists($file_name_running)) {
 }
 touch($file_name_running);
 
+/*
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -63,7 +64,7 @@ SELECT M1.api_key
    AND M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-/*
+*/
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -71,7 +72,6 @@ SELECT M1.api_key
  WHERE M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-*/
 
 $api_keys = array();
 $servers = array();
@@ -154,6 +154,8 @@ for ($i = 0; $i < count($servers); $i++)
                            ],
                            null);
   
+  error_log($servers[$i]);
+  error_log($response);
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
