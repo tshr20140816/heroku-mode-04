@@ -99,6 +99,7 @@ for ($i = 0; $i < count($servers); $i++)
                            ['Accept: application/vnd.heroku+json; version=3.account-quotas',
                             'Authorization: Bearer ' . $api_keys[$i],
                             'Connection: Keep-Alive',
+                            'Range: id ..; max=1000;',
                            ],
                            null);
   
