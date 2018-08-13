@@ -171,7 +171,8 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     // $ch = curl_init();
 
     curl_setopt($ch_, CURLOPT_URL, $url_); 
-    curl_setopt($ch_, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch_, CURLOPT_HEADER, TRUE);
+    curl_setopt($ch_, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch_, CURLOPT_CONNECTTIMEOUT, 20);
     curl_setopt($ch_, CURLOPT_ENCODING, "");
     curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, 1);
@@ -180,7 +181,7 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
       curl_setopt($ch_, CURLOPT_HTTPHEADER, $headers_);
     }
     if (is_null($post_data_) == FALSE) {
-      curl_setopt($ch_, CURLOPT_POST, true); 
+      curl_setopt($ch_, CURLOPT_POST, TRUE); 
       curl_setopt($ch_, CURLOPT_POSTFIELDS, $post_data_);
     }
 
