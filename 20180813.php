@@ -188,7 +188,9 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     $http_code = curl_getinfo($ch_, CURLINFO_HTTP_CODE);
     $curl_errno = curl_errno($ch_);
     $curl_error = curl_error($ch_);
-
+    
+    $response_headers = curl_getinfo($ch_);
+    error_log(var_export($response_headers, TRUE));
     // curl_close($ch);
 
     if ($curl_errno > 0) {
