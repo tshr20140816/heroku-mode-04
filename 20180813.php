@@ -172,7 +172,7 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     // $ch = curl_init();
 
     curl_setopt($ch_, CURLOPT_URL, $url_); 
-    curl_setopt($ch_, CURLOPT_HEADER, TRUE);
+    //curl_setopt($ch_, CURLOPT_HEADER, TRUE);
     curl_setopt($ch_, CURLOPT_RETURNTRANSFER, TRUE);
     curl_setopt($ch_, CURLOPT_CONNECTTIMEOUT, 20);
     curl_setopt($ch_, CURLOPT_ENCODING, "");
@@ -193,7 +193,7 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     
     $info = curl_getinfo($ch_);
     error_log(var_export($info, TRUE));
-    error_log(substr($response, 0, $info['header_size']));
+    //error_log(substr($response, 0, $info['header_size']));
     // curl_close($ch);
 
     if ($curl_errno > 0) {
