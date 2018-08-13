@@ -2,6 +2,8 @@
 
 $pid = getmypid();
 
+error_log('START ' . date());
+
 $connection_info = parse_url(getenv('DATABASE_URL'));
 
 $pdo = new PDO(
@@ -82,6 +84,8 @@ foreach ($api_keys as $api_key)
     */
 }
 
+error_log('CHECK POINT 100 ' . date());
+
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
@@ -154,6 +158,8 @@ curl_close($ch);
 curl_close($ch_loggly);
 $pdo = null;
 unlink($file_name_running);
+
+error_log('FINISH ' . date());
 
 exit();
 
