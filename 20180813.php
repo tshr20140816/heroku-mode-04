@@ -2,50 +2,12 @@
 
 $pid = getmypid();
 
-if (!isset($_GET['p']) || $_GET['p'] === '')
-{
-  error_log('IGNORE');
-  exit();
-}
-$path = $_GET['p'];
-
-$offset = 0;
-if (isset($_GET['n']) && $_GET['n'] !== '' && ctype_digit($_GET['n']))
-{
-  $offset = $_GET['n'];
-}
-
-if ($path !== 'ttrss' && $path !== 'ml' && $path !== 'carp_news')
-{
-  error_log('IGNORE');
-  exit();
-}
-
 $connection_info = parse_url(getenv('DATABASE_URL'));
 
 $pdo = new PDO(
   "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
   $connection_info['user'],
   $connection_info['pass']);
-
-// 未使用割合が ($offset + 1) 番目に多いサーバにリダイレクト
-
-$sql = <<< __HEREDOC__
-SELECT M1.fqdn
-  FROM m_application M1
- WHERE M1.select_type = 1
-   AND M1.dyno_quota <> -1
- ORDER BY CAST(M1.dyno_used as numeric) / CAST(M1.dyno_quota as numeric)
-__HEREDOC__;
-$sql .= " LIMIT 1 OFFSET ${offset}";
-
-foreach ($pdo->query($sql) as $row)
-{
-  $fqdn = $row['fqdn'];
-  break;
-}
-
-header("Location: https://${fqdn}/${path}/");
 
 // 使用量チェック & 更新
 
@@ -59,19 +21,9 @@ $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
   FROM m_application M1
- WHERE M1.update_time < localtimestamp - interval '30 minutes'
-   AND M1.select_type <> 9
- ORDER BY M1.api_key
-__HEREDOC__;
-/*
-$sql = <<< __HEREDOC__
-SELECT M1.api_key
-      ,M1.fqdn
-  FROM m_application M1
  WHERE M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-*/
 
 $api_keys = array();
 $servers = array();
@@ -89,16 +41,6 @@ if (count($api_keys) === 0)
   exit();
 }
 
-$sql = <<< __HEREDOC__
-UPDATE m_application
-   SET dyno_used = :b_dyno_used
-      ,dyno_quota = :b_dyno_quota
-      ,dyno_used_previous = CASE dyno_used WHEN :b_dyno_used THEN dyno_used_previous ELSE dyno_used END
-      ,update_flag = CASE dyno_used WHEN :b_dyno_used THEN 0 ELSE 1 END
-      ,change_time = CASE dyno_used WHEN :b_dyno_used THEN change_time ELSE localtimestamp END
- WHERE api_key = :b_api_key
-__HEREDOC__;
-$statement = $pdo->prepare($sql);
 $ch = curl_init();
 $ch_loggly = curl_init();
 
@@ -128,6 +70,7 @@ foreach ($api_keys as $api_key)
   
   $data = json_decode($response, true);
 
+  /*
   $dyno_used = $data['quota_used'];
   $dyno_quota = $data['account_quota'];
   
@@ -136,6 +79,7 @@ foreach ($api_keys as $api_key)
      ':b_dyno_quota' => $dyno_quota,
      ':b_api_key' => $api_key,
     ]);
+    */
 }
 
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
@@ -154,8 +98,8 @@ for ($i = 0; $i < count($servers); $i++)
                            ],
                            null);
   
-  error_log($servers[$i]);
-  error_log($response);
+  //error_log($servers[$i]);
+  //error_log($response);
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
