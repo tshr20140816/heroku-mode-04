@@ -55,7 +55,6 @@ if (file_exists($file_name_running)) {
 }
 touch($file_name_running);
 
-/*
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -64,7 +63,7 @@ SELECT M1.api_key
    AND M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
-*/
+/*
 $sql = <<< __HEREDOC__
 SELECT M1.api_key
       ,M1.fqdn
@@ -72,6 +71,7 @@ SELECT M1.api_key
  WHERE M1.select_type <> 9
  ORDER BY M1.api_key
 __HEREDOC__;
+*/
 
 $api_keys = array();
 $servers = array();
@@ -197,16 +197,14 @@ SELECT M1.fqdn
  ORDER BY M1.dyno_used
 __HEREDOC__;
 
-$url = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
-
 foreach ($pdo->query($sql) as $row)
 {  
-  get_contents($ch_loggly, $url,
+  get_contents($ch_loggly, $url_loggly,
                ['Content-Type: text/plain', 'Connection: Keep-Alive'],
                "R ${row['dhm']} ${row['fqdn']} ${row['update_time']} ${row['dyno_used']}${row['note']}${row['state']}");
 }
 
-get_contents($ch_loggly, $url, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
+get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 03');
 
 curl_close($ch);
 curl_close($ch_loggly);
