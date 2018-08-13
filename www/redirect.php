@@ -154,9 +154,7 @@ for ($i = 0; $i < count($servers); $i++)
                             'Range: id ..; max=1000;',
                            ],
                            null);
-  
-  error_log($servers[$i]);
-  error_log($response);
+
   $data = json_decode($response, true);
   $updated_at = '';
   $updated_at_old = '';
