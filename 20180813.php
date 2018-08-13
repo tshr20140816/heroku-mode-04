@@ -241,6 +241,8 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
 }
 
 function get_contents2($mh_) {
+  $responses = array();
+  
   do {
     $stat = curl_multi_exec($mh_, $running);
   } while ($stat === CURLM_CALL_MULTI_PERFORM);
@@ -256,18 +258,19 @@ function get_contents2($mh_) {
       continue 2;
     default:
       do {
-        $stat = curl_multi_exec($mh, $running);
+        $stat = curl_multi_exec($mh_, $running);
       } while ($stat === CURLM_CALL_MULTI_PERFORM);
     
       do if ($raised = curl_multi_info_read($mh_, $remains)) {
-        $response = curl_multi_getcontent($raised['handle']);
-        curl_multi_remove_handle($mh, $raised['handle']);
+        $info = curl_getinfo($raised['handle']);
+        $responses[$info['url']] = curl_multi_getcontent($raised['handle']);
+        curl_multi_remove_handle($mh_, $raised['handle']);
         curl_close($raised['handle']);
       } while ($remains);
   } while ($running);
   
   curl_multi_close($mh_);
   
-  return $response;
+  return $responses;
 }
 ?>
