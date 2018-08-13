@@ -225,6 +225,7 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     curl_setopt($ch_, CURLOPT_ENCODING, "");
     curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch_, CURLOPT_MAXREDIRS, 3);
+    curl_setopt($ch_, CURLOPT_SSL_FALSESTART, TRUE);
     if (is_null($headers_) == FALSE) {
       curl_setopt($ch_, CURLOPT_HTTPHEADER, $headers_);
     }
