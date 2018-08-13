@@ -86,6 +86,7 @@ foreach ($api_keys as $api_key)
 
 error_log('CHECK POINT 100 ' . date('H:i:s'));
 
+/*
 $mh = curl_multi_init();
 foreach ($api_keys as $api_key)
 {
@@ -116,6 +117,7 @@ foreach ($api_keys as $api_key)
 }
 
 error_log('CHECK POINT 200 ' . date('H:i:s'));
+*/
 
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
@@ -209,6 +211,7 @@ function get_contents($ch_, $url_, $headers_, $post_data_) {
     curl_setopt($ch_, CURLOPT_ENCODING, "");
     curl_setopt($ch_, CURLOPT_FOLLOWLOCATION, 1);
     curl_setopt($ch_, CURLOPT_MAXREDIRS, 3);
+    curl_setopt($ch_, CURLOPT_SSL_FALSESTART, TRUE);
     if (is_null($headers_) == FALSE) {
       curl_setopt($ch_, CURLOPT_HTTPHEADER, $headers_);
     }
