@@ -134,7 +134,7 @@ do switch (curl_multi_select($mh, 10)) {
       error_log('URL : ' . $info['url']);
       $response = curl_multi_getcontent($raised['handle']);
       error_log("LENGTH : " . strlen($response));
-      //error_log($response);
+      error_log($response);
       //f_parse($response, $host, $page);
       curl_multi_remove_handle($mh, $raised['handle']);
       curl_close($raised['handle']);
