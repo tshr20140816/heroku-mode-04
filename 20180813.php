@@ -144,6 +144,8 @@ curl_multi_close($mh);
 
 error_log('CHECK POINT 200 ' . date('H:i:s'));
 
+exit;
+
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
 
