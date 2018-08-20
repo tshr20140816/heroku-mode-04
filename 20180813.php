@@ -46,6 +46,7 @@ if (count($api_keys) === 0)
 $ch = curl_init();
 $ch_loggly = curl_init();
 
+/*
 foreach ($api_keys as $api_key)
 {
   $url = 'https://api.heroku.com/account';
@@ -82,7 +83,7 @@ foreach ($api_keys as $api_key)
      ':b_api_key' => $api_key,
     ]);
     */
-}
+//}
 
 error_log('CHECK POINT 100 ' . date('H:i:s'));
 
