@@ -86,7 +86,7 @@ foreach ($api_keys as $api_key)
 
 error_log('CHECK POINT 100 ' . date('H:i:s'));
 
-/*
+
 $mh = curl_multi_init();
 foreach ($api_keys as $api_key)
 {
@@ -108,16 +108,41 @@ foreach ($api_keys as $api_key)
                           ],
     ]);
   curl_multi_add_handle($mh, $ch2);
-  
-  do {
-    $stat = curl_multi_exec($mh, $running);
-  } while ($stat === CURLM_CALL_MULTI_PERFORM);
-  
-  
 }
 
+do {
+  $stat = curl_multi_exec($mh, $running);
+} while ($stat === CURLM_CALL_MULTI_PERFORM);
+
+do switch (curl_multi_select($mh, 10)) {
+  case -1:
+    usleep(10);
+    do {
+      $stat = curl_multi_exec($mh, $running);
+    } while ($stat === CURLM_CALL_MULTI_PERFORM);
+    continue 2;
+  case 0:
+    continue 2;
+  default:
+    do {
+      $stat = curl_multi_exec($mh, $running);
+    } while ($stat === CURLM_CALL_MULTI_PERFORM);
+
+    do if ($raised = curl_multi_info_read($mh, $remains)) {
+      $info = curl_getinfo($raised['handle']);
+      error_log('URL : ' . $info['url']);
+      $response = curl_multi_getcontent($raised['handle']);
+      error_log("LENGTH : " . strlen($response));
+      //error_log($response);
+      //f_parse($response, $host, $page);
+      curl_multi_remove_handle($mh, $raised['handle']);
+      curl_close($raised['handle']);
+    } while ($remains);
+} while ($running);
+
+curl_multi_close($mh); 
+
 error_log('CHECK POINT 200 ' . date('H:i:s'));
-*/
 
 $url_loggly = 'https://logs-01.loggly.com/inputs/' . getenv('LOGGLY_TOKEN') . '/tag/dyno,' . getenv('HEROKU_APP_NAME') . '/';
 get_contents($ch_loggly, $url_loggly, ['Content-Type: text/plain', 'Connection: Keep-Alive'], 'R MARKER 01');
