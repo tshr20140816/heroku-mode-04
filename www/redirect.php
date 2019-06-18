@@ -15,7 +15,7 @@ if (isset($_GET['n']) && $_GET['n'] !== '' && ctype_digit($_GET['n']))
   $offset = $_GET['n'];
 }
 
-if ($path !== 'ttrss' && $path !== 'ml' && $path !== 'carp_news')
+if ($path !== 'ttrss' && $path !== 'ml' && $path !== 'carp_news' && $path !== '010/ml_new')
 {
   error_log('IGNORE');
   exit();
