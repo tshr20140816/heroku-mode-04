@@ -44,7 +44,9 @@ SELECT M1.fqdn
  ORDER BY CAST(M1.dyno_used as numeric) / CAST(M1.dyno_quota as numeric)
  LIMIT 1 OFFSET 0
 __HEREDOC__;
-    
+
+    $connection_info = parse_url(getenv('DATABASE_URL'));
+
     $pdo = new PDO(
         "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
         $connection_info['user'],
