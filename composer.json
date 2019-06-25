@@ -2,7 +2,8 @@
   "require":
   {
     "php": ">=7.2.9",
-    "ext-mbstring": "*"
+    "ext-mbstring": "*",
+    "ext-imap": "*"
   }
   ,
   "require-dev":
