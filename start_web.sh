@@ -53,6 +53,8 @@ curl -i -H 'content-type:text/plain' -d "S ${HEROKU_APP_NAME} * ${HOME_FQDN} ${H
 
 htpasswd -c -b .htpasswd ${BASIC_USER} ${BASIC_PASSWORD}
 
+printenv | wc -c
+
 wait
 
 vendor/bin/heroku-php-apache2 -C apache.conf www
