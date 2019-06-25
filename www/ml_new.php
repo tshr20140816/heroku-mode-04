@@ -17,7 +17,9 @@ $html = <<< __HEREDOC__
 </body></html>
 __HEREDOC__;
 
-if ($_SERVER["REQUEST_METHOD"] == 'POST') {
+if ($_SERVER["REQUEST_METHOD"] != 'POST') {
+    echo $html;    
+} else {
     $user = $_POST['user'];
     $password = $_POST['password'];
 
@@ -33,10 +35,29 @@ if ($_SERVER["REQUEST_METHOD"] == 'POST') {
         $count = $count - $count % 10;
         $suffix = $count . '-' . ($count + 50);
     }
-    $url = 'https://' . $user . ':' . $password . '@' . $_SERVER['HTTP_HOST'] . '/ml/' . $suffix;
-    header('Location: ' . $url);
-} else {
-    echo $html;
+    
+    $sql = <<< __HEREDOC__
+SELECT M1.fqdn
+  FROM m_application M1
+ WHERE M1.select_type = 1
+   AND M1.dyno_quota <> -1
+ ORDER BY CAST(M1.dyno_used as numeric) / CAST(M1.dyno_quota as numeric)
+ LIMIT 1 OFFSET 0
+__HEREDOC__;
+    
+    $pdo = new PDO(
+        "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
+        $connection_info['user'],
+        $connection_info['pass']);
+    
+    foreach ($pdo->query($sql) as $row)
+    {
+        $fqdn = $row['fqdn'];
+        break;
+    }
+    $pdo = null;
+    
+    header("Location: https://${fqdn}/ml/${suffix}");
 }
 
 $time_finish = microtime(true);
