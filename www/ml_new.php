@@ -16,12 +16,8 @@ $html = <<< __HEREDOC__
 </form>
 </body></html>
 __HEREDOC__;
-
-if ($_SERVER["REQUEST_METHOD"] != 'POST') {
-    echo $html;    
-} else {
-    
-    $sql = <<< __HEREDOC__
+   
+$sql = <<< __HEREDOC__
 SELECT M1.fqdn
   FROM m_application M1
  WHERE M1.select_type = 1
@@ -30,25 +26,28 @@ SELECT M1.fqdn
  LIMIT 1 OFFSET 0
 __HEREDOC__;
 
-    $connection_info = parse_url(getenv('DATABASE_URL'));
+$connection_info = parse_url(getenv('DATABASE_URL'));
 
-    $pdo = new PDO(
-        "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
-        $connection_info['user'],
-        $connection_info['pass']);
+$pdo = new PDO(
+    "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
+    $connection_info['user'],
+    $connection_info['pass']);
 
-    foreach ($pdo->query($sql) as $row)
-    {
-        $fqdn = $row['fqdn'];
-        break;
-    }
-    $pdo = null;
+foreach ($pdo->query($sql) as $row)
+{
+    $fqdn = $row['fqdn'];
+    break;
+}
+$pdo = null;
 
+$url = "https://${fqdn}/ml/";
+exec("curl -u dummy:dummy ${url} > /dev/null 2>&1 &");
+
+if ($_SERVER["REQUEST_METHOD"] != 'POST') {
+    echo $html;    
+} else {
     $user = $_POST['user'];
     $password = $_POST['password'];
-
-    $url = "https://${fqdn}/ml/";
-    exec("curl -u ${user}:${password} ${url} > /dev/null 2>&1 &");
 
     $imap = imap_open('{imap.mail.yahoo.co.jp:993/ssl}', $user, $password);
 
