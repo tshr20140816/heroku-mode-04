@@ -20,15 +20,6 @@ __HEREDOC__;
 if ($_SERVER["REQUEST_METHOD"] != 'POST') {
     echo $html;    
 } else {
-    $user = $_POST['user'];
-    $password = $_POST['password'];
-
-    $imap = imap_open('{imap.mail.yahoo.co.jp:993/ssl}', $user, $password);
-
-    $count = imap_num_msg($imap);
-    error_log("${pid} mail count : ${count}");
-
-    imap_close($imap);
     
     $sql = <<< __HEREDOC__
 SELECT M1.fqdn
@@ -45,13 +36,26 @@ __HEREDOC__;
         "pgsql:host=${connection_info['host']};dbname=" . substr($connection_info['path'], 1),
         $connection_info['user'],
         $connection_info['pass']);
-    
+
     foreach ($pdo->query($sql) as $row)
     {
         $fqdn = $row['fqdn'];
         break;
     }
     $pdo = null;
+
+    $user = $_POST['user'];
+    $password = $_POST['password'];
+
+    $url = "https://${fqdn}/ml/";
+    exec("curl -u ${user}:${password} ${url} > /dev/null 2>&1 &");
+
+    $imap = imap_open('{imap.mail.yahoo.co.jp:993/ssl}', $user, $password);
+
+    $count = imap_num_msg($imap);
+    error_log("${pid} mail count : ${count}");
+
+    imap_close($imap);
 
     $suffix = '';
     if ($count != false) {
