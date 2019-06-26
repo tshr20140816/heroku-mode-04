@@ -29,12 +29,6 @@ if ($_SERVER["REQUEST_METHOD"] != 'POST') {
     error_log("${pid} mail count : ${count}");
 
     imap_close($imap);
-
-    $suffix = '';
-    if ($count != false) {
-        $count = $count - $count % 10;
-        $suffix = $count . '-' . ($count + 50);
-    }
     
     $sql = <<< __HEREDOC__
 SELECT M1.fqdn
@@ -58,7 +52,15 @@ __HEREDOC__;
         break;
     }
     $pdo = null;
-    
+
+    $suffix = '';
+    if ($count != false) {
+        $count = $count - $count % 10;
+        $suffix = $count . '-' . ($count + 50);
+        $url = "https://${fqdn}/ml/" . ($count - 100) . '-' . $count;
+        exec("curl -u ${user}:${password} ${url} > /dev/null 2>&1 &");
+    }
+
     header("Location: https://${fqdn}/ml/${suffix}");
 }
 
