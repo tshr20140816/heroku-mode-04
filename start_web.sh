@@ -34,7 +34,7 @@ if [ ! -v BASIC_PASSWORD ]; then
 fi
 
 rm apache.conf
-wget https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf &
+curl -O https://raw.githubusercontent.com/tshr20140816/heroku-mode-04/master/apache.conf &
 
 export HOME_IP_ADDRESS=$(nslookup ${HOME_FQDN} 8.8.8.8 | tail -n2 | grep -o '[0-9]\+.\+')
 if [ -z "${HOME_IP_ADDRESS}" ]; then
